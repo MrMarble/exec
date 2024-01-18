@@ -1,0 +1,15 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  test:
+    cmd: go test -v -race ./...
+
+  release:
+    vars:
+      NEXT_VERSION:
+        sh: svu n
+    cmds:
+      - git tag {{.NEXT_VERSION}}
+      - git push origin --tags
