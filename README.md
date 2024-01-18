@@ -9,15 +9,11 @@ The `exec` package in Go is designed to run external commands. It is similar to 
 ## Example
 
 ```go
-cmd := &Cmd{
-    Path: "/usr/bin/ls",
-    Args: []string{"ls", "-l"},
-}
-
-err := cmd.Run()
+out, err := exec.Command("date").Output()
 if err != nil {
-    log.Fatal(err)
+  log.Fatal(err)
 }
+fmt.Printf("The date is %s\n", out)
 ```
 
-This example runs the `ls -l` command and logs any errors that occur.
+This example runs the `date` command and logs any errors that occur.
