@@ -8,6 +8,7 @@ import (
 )
 
 func TestExec(t *testing.T) {
+	t.Parallel()
 	t.Run("Output", func(t *testing.T) {
 		out, err := exec.Command("/bin/sh", "-c", "echo 'stdout'").Output()
 		if err != nil {
@@ -30,6 +31,16 @@ func TestExec(t *testing.T) {
 		}
 		if elapsed > 1*time.Second {
 			t.Errorf("Expected execution time < 1s, got %s", elapsed.String())
+		}
+	})
+
+	t.Run("CombinedOutput", func(t *testing.T) {
+		out, err := exec.Command("/bin/sh", "-c", "echo 'stdout'; echo 'stderr' 1>&2").CombinedOutput()
+		if err != nil {
+			t.Error(err)
+		}
+		if string(out) != "stdout\nstderr\n" {
+			t.Errorf("Expected 'stdout\\nstderr\\n', got '%s'", out)
 		}
 	})
 }

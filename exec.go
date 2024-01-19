@@ -90,3 +90,40 @@ func (c *Cmd) Output() ([]byte, error) {
 	defer c.mu.Unlock()
 	return w.Bytes(), nil
 }
+
+// CombinedOutput runs the command and returns its combined standard
+// output and standard error.
+func (c *Cmd) CombinedOutput() ([]byte, error) {
+	// Create a pipe for the child's stdout.
+	w := bytes.NewBuffer([]byte{})
+	pr, pw, err := os.Pipe()
+	if err != nil {
+		return nil, err
+	}
+	defer pw.Close()
+
+	// Start copying from the pipe to the buffer.
+	go func() {
+		c.mu.Lock()
+		io.Copy(w, pr)
+		c.mu.Unlock()
+		pr.Close() // in case io.Copy stopped due to write error
+	}()
+
+	proc, err := os.StartProcess(c.Path, c.Args, &os.ProcAttr{Files: []*os.File{os.Stdin, pw, pw}})
+	if err != nil {
+		return nil, err
+	}
+
+	c.Process = proc
+	state, err := proc.Wait()
+	if err != nil {
+		return nil, err
+	}
+	c.ProcessState = state
+	// Stop the copy and wait for it to finish.
+	pr.Close()
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return w.Bytes(), nil
+}
