@@ -2,6 +2,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/mrmarble/exec.svg)](https://pkg.go.dev/github.com/mrmarble/exec)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mrmarble/exec)](https://goreportcard.com/report/github.com/mrmarble/exec)
+[![Tests](https://github.com/MrMarble/exec/actions/workflows/go.yml/badge.svg)](https://github.com/MrMarble/exec/actions/workflows/go.yml)
 
 The `exec` package in Go is designed to run external commands. It is similar to the `os/exec` package, but provides a simpler interface and does not support streaming.
 
