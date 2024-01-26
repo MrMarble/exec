@@ -90,7 +90,7 @@ func (c *Cmd) Output() ([]byte, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if !state.Success() {
-		return nil, errors.New(state.String())
+		return w.Bytes(), errors.New(state.String())
 	}
 	return w.Bytes(), nil
 }
@@ -130,7 +130,7 @@ func (c *Cmd) CombinedOutput() ([]byte, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if !state.Success() {
-		return nil, errors.New(state.String())
+		return w.Bytes(), errors.New(state.String())
 	}
 	return w.Bytes(), nil
 }
