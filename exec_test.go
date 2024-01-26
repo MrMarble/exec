@@ -43,4 +43,11 @@ func TestExec(t *testing.T) {
 			t.Errorf("Expected 'stdout\\nstderr\\n', got '%s'", out)
 		}
 	})
+
+	t.Run("Exit code", func(t *testing.T) {
+		_, err := exec.Command("/bin/sh", "-c", "exit 1").Output()
+		if err == nil {
+			t.Error("Expected non-zero exit code")
+		}
+	})
 }
